@@ -18,9 +18,9 @@ Dashboard only:
 
 [https://southnotdev.github.io/market-microstructure-simulator/dashboard/](https://southnotdev.github.io/market-microstructure-simulator/dashboard/)
 
-<video src="assets/demo.mp4" controls muted loop playsinline width="100%"></video>
+[![Market microstructure simulator demo](assets/demo-preview.gif)](https://southnotdev.github.io/market-microstructure-simulator/)
 
-If the video does not render in your browser, open the file directly:
+Full muted video file:
 
 [assets/demo.mp4](assets/demo.mp4)
 
