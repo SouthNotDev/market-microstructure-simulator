@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Market Microstructure Simulator</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #05080a;
+        --surface: #0a0f11;
+        --line: rgba(190, 204, 210, 0.18);
+        --text: #e4e9ea;
+        --muted: #9aa5a9;
+        --accent: #9be71a;
+        --mono: "SFMono-Regular", "Cascadia Mono", "Roboto Mono", monospace;
+        --sans: "Aptos", "Segoe UI", system-ui, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 20% 10%, rgba(118, 149, 117, 0.12), transparent 34%),
+          radial-gradient(circle at 80% 80%, rgba(84, 107, 92, 0.12), transparent 30%),
+          var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+      }
+
+      main {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 48px 0;
+      }
+
+      header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 24px;
+        align-items: end;
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 780px;
+        font-size: clamp(34px, 5vw, 68px);
+        line-height: 0.96;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+
+      p {
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.6;
+      }
+
+      .kicker,
+      .tag {
+        color: var(--accent);
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 0 16px;
+        background: rgba(12, 18, 20, 0.82);
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 13px;
+        text-decoration: none;
+      }
+
+      .button.primary {
+        border-color: rgba(155, 231, 26, 0.44);
+        color: var(--accent);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.28fr 0.72fr;
+        gap: 28px;
+        margin-top: 28px;
+        align-items: stretch;
+      }
+
+      video,
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface);
+      }
+
+      video {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+      }
+
+      .panel {
+        padding: 24px;
+      }
+
+      .panel h2 {
+        margin: 0 0 14px;
+        font-size: 18px;
+      }
+
+      ol {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      code {
+        font-family: var(--mono);
+        color: var(--text);
+      }
+
+      footer {
+        margin-top: 28px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      @media (max-width: 860px) {
+        header,
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .actions {
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <div class="kicker">Learning project</div>
+          <h1>Market Microstructure Simulator</h1>
+          <p>
+            A small crypto market simulator built step by step to understand
+            orders, matching, the limit order book, recording, and midprice
+            movement.
+          </p>
+        </div>
+        <nav class="actions" aria-label="Project links">
+          <a class="button primary" href="./dashboard/">Open dashboard</a>
+          <a class="button" href="https://github.com/SouthNotDev/market-microstructure-simulator">View repo</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <video src="./assets/demo.mp4" controls muted autoplay loop playsinline></video>
+        <aside class="panel">
+          <span class="tag">What it shows</span>
+          <h2>Orders moving through the market system</h2>
+          <ol>
+            <li>Random agents create synthetic orders.</li>
+            <li>The exchange validates and assigns IDs.</li>
+            <li>The matching engine applies price-time priority.</li>
+            <li>The order book updates resting liquidity.</li>
+            <li>The recorder stores trades, snapshots, and midprice.</li>
+          </ol>
+        </aside>
+      </section>
+
+      <footer>
+        Static demo generated from <code>dashboard/trace.json</code>. The video
+        file has no audio track.
+      </footer>
+    </main>
+  </body>
+</html>

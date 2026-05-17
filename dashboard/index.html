@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Market Microstructure Simulator Dashboard</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="canvas" aria-label="Market Microstructure Simulator Dashboard">
+      <header class="topbar">
+        <div class="brand">MARKET MICROSTRUCTURE SIMULATOR</div>
+        <div class="status"><span></span> SIMULATION RUNNING</div>
+        <div class="stat"><small>Time</small><strong id="timeLabel">00:00:00.000</strong></div>
+        <div class="stat"><small>Event</small><strong id="eventCount">0</strong></div>
+        <div class="stat"><small>Order</small><strong id="orderCount">0</strong></div>
+        <div class="stat"><small>Symbol</small><strong id="symbolLabel">ABC</strong></div>
+        <div class="controls">
+          <button id="stepBack" type="button">PREV</button>
+          <button id="toggleRun" type="button">PAUSE</button>
+          <button id="stepNext" type="button">NEXT</button>
+        </div>
+      </header>
+
+      <section class="frame">
+        <svg id="connectorLayer" class="connector-layer" viewBox="0 0 1600 760" aria-hidden="true">
+          <g id="connectorPaths"></g>
+          <g id="connectorLabels"></g>
+          <g id="flowPackets"></g>
+        </svg>
+
+        <section class="node agents" id="agentsNode">
+          <h2>1. AGENTS</h2>
+          <div class="node-body">
+            <span class="port out" data-port="agent-out"></span>
+            <div class="panel-label">Random agent pool</div>
+            <div class="agent-list" id="agentList"></div>
+            <div class="agent-intent">
+              <small>current intent</small>
+              <strong id="agentIntent">waiting</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="payload-card order-card" id="orderCard">
+          <span class="port in" data-port="ticket-in"></span>
+          <span class="port out" data-port="ticket-out"></span>
+          <h3>MarketEvent</h3>
+          <dl>
+            <dt>class</dt><dd id="eventClass">SubmitLimitOrder</dd>
+            <dt>side</dt><dd id="ticketSide">BUY</dd>
+            <dt>qty</dt><dd id="ticketQty">300</dd>
+            <dt>price</dt><dd id="ticketPrice">100.40</dd>
+            <dt>tif</dt><dd id="ticketType">GTC</dd>
+          </dl>
+        </section>
+
+        <section class="node exchange" id="exchangeNode">
+          <h2>2. EXCHANGE</h2>
+          <div class="node-body">
+            <span class="port in" data-port="exchange-in"></span>
+            <span class="port out" data-port="exchange-out"></span>
+            <div class="module-title">Gateway</div>
+            <div class="exchange-grid">
+              <div><span>risk</span><strong>OK</strong></div>
+              <div><span>session</span><strong>OPEN</strong></div>
+              <div><span>accepted</span><strong id="acceptedCount">0</strong></div>
+              <div><span>clock</span><strong id="exchangeClock">0</strong></div>
+            </div>
+            <div class="sequence">
+              <span>next_order_id</span>
+              <strong id="nextId">1</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="payload-card id-card" id="idCard">
+          <span class="port in" data-port="id-in"></span>
+          <span class="port out" data-port="id-out"></span>
+          <h3>Order</h3>
+          <dl>
+            <dt>order_id</dt><dd id="assignedId">1</dd>
+            <dt>timestamp</dt><dd id="assignedTs">1</dd>
+          </dl>
+        </section>
+
+        <section class="node matcher" id="matcherNode">
+          <h2>3. MATCHING ENGINE</h2>
+          <div class="node-body">
+            <span class="port in" data-port="matcher-in"></span>
+            <span class="port out" data-port="matcher-out"></span>
+            <span class="port out down" data-port="matcher-record"></span>
+            <div class="module-title">Matcher</div>
+            <div class="logic">
+              <span>rule</span>
+              <strong>PRICE-TIME</strong>
+            </div>
+            <div class="incoming">
+              <span>incoming order</span>
+              <strong id="incomingText">ID 1 BUY 300 @ 100.40</strong>
+            </div>
+            <div class="match-result" id="matchResult">RESTING</div>
+          </div>
+        </section>
+
+        <section class="node book" id="bookNode">
+          <h2>4. ORDER BOOK</h2>
+          <div class="node-body">
+            <span class="port in" data-port="book-in"></span>
+            <span class="port out" data-port="book-out"></span>
+            <span class="port out down" data-port="book-record"></span>
+            <div class="book-title">Limit Order Book (ABC)</div>
+            <div class="side ask">ASKS (Sell)</div>
+            <div class="book-head"><span>price</span><span>size</span><span>orders</span></div>
+            <div id="asks" class="book-rows"></div>
+            <div class="divider"></div>
+            <div class="side bid">BIDS (Buy)</div>
+            <div class="book-head"><span>price</span><span>size</span><span>orders</span></div>
+            <div id="bids" class="book-rows"></div>
+          </div>
+        </section>
+
+        <aside class="top-book" id="topBookNode">
+          <span class="port in" data-port="topbook-in"></span>
+          <h3>Top of Book</h3>
+          <small>best ask</small><strong class="ask" id="bestAsk">-</strong>
+          <hr />
+          <small>best bid</small><strong class="bid" id="bestBid">-</strong>
+          <hr />
+          <small>midprice</small><strong id="midPrice">-</strong>
+        </aside>
+
+        <section class="node recorder" id="recorderNode">
+          <h2>5. RECORDER <em>(Observer)</em></h2>
+          <div class="node-body">
+            <span class="port in" data-port="recorder-in-a"></span>
+            <span class="port in" data-port="recorder-in-b"></span>
+            <span class="port out" data-port="recorder-out"></span>
+            <div class="rec-cell"><strong>MatchResult</strong><span id="orderLog">waiting</span></div>
+            <div class="rec-cell"><strong>Trade Log</strong><span id="tradeLog">no trade</span></div>
+            <div class="rec-cell"><strong>BookSnapshot</strong><span id="snapshotLog">waiting</span></div>
+            <div class="rec-cell"><strong>Metrics</strong><span id="metricLog">spread / depth</span></div>
+          </div>
+        </section>
+
+        <section class="chart-panel" id="chartNode">
+          <span class="port in" data-port="chart-in"></span>
+          <div class="chart-head"><strong>MIDPRICE OVER TIME</strong><span>current <em id="chartMid">-</em></span></div>
+          <svg id="midChart" viewBox="0 0 430 154" aria-label="Midprice chart">
+            <g id="gridLines"></g>
+            <polyline id="midLine"></polyline>
+            <circle id="midDot" r="5"></circle>
+            <text id="midTag">-</text>
+          </svg>
+        </section>
+      </section>
+
+      <footer class="legend">
+        <div><i class="sample active"></i>Active data flow <strong id="legendId">ID 1</strong></div>
+        <div><i class="sample passive"></i>Observer flow</div>
+        <div class="active-order"><strong>ACTIVE PAYLOAD</strong><span id="footerOrder">waiting</span></div>
+      </footer>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>
