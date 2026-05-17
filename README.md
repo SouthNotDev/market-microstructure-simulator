@@ -10,20 +10,19 @@ real orders, or use real money.
 
 ## Demo
 
-The project includes a static educational dashboard:
+Live demo:
 
-```text
-dashboard/index.html
-```
+[https://southnotdev.github.io/market-microstructure-simulator/](https://southnotdev.github.io/market-microstructure-simulator/)
 
-When published with GitHub Pages, the quick demo link will be:
+Dashboard only:
 
-```text
-https://southnotdev.github.io/market-microstructure-simulator/
-```
+[https://southnotdev.github.io/market-microstructure-simulator/dashboard/](https://southnotdev.github.io/market-microstructure-simulator/dashboard/)
 
-The landing page shows a muted video preview and links to the live simulator
-dashboard.
+<video src="assets/demo.mp4" controls muted loop playsinline width="100%"></video>
+
+If the video does not render in your browser, open the file directly:
+
+[assets/demo.mp4](assets/demo.mp4)
 
 ## What The Dashboard Shows
 
